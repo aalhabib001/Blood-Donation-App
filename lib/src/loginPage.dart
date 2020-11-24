@@ -1,10 +1,23 @@
 import 'package:flutter/material.dart';
 //import 'package:flutter_login_signup/src/signup.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'dart:convert' show json, base64, ascii;
+import 'dart:convert' ;
+
 
 import 'Widget/bezierContainer.dart';
 
+
+const SERVER_IP = 'https://blood-donation-backend-se231.herokuapp.com/api';
+final storage = FlutterSecureStorage();
+
 class LoginPage extends StatelessWidget {
-  Widget _entryField(String title, bool isPassword) {
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  Widget _entryField(String title, bool isPassword, var tc) {
     return Container(
         margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
         child: Column(
@@ -21,6 +34,7 @@ class LoginPage extends StatelessWidget {
             SizedBox(height: 15),
             TextField(
               obscureText: isPassword,
+              controller: tc,
               decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(13)),
@@ -58,6 +72,36 @@ class LoginPage extends StatelessWidget {
     );
   }
 
+  Future<String> attemptLogIn(String email, String password) async {
+    print('Hi');
+    Map<String,String> headers = {'Content-Type':'application/json'};
+    final msg = jsonEncode({"email":email,"password":password});
+    var res = await http.post(
+        "$SERVER_IP/auth/login",
+        body: msg,
+      headers: headers
+    );
+    print(res.statusCode);
+
+    if(res.statusCode == 200){
+      Map<String, dynamic> response = jsonDecode(res.body);
+
+      String jwt = response['token'];
+      return jwt;
+
+    }
+    return null;
+  }
+
+  void displayDialog(context, title, text) => showDialog(
+    context: context,
+    builder: (context) =>
+        AlertDialog(
+            title: Text(title),
+            content: Text(text)
+        ),
+  );
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -79,13 +123,34 @@ class LoginPage extends StatelessWidget {
                 children: <Widget>[
                   Image.asset(
                     'asset/l2.png',
-                    height: 100,
-                    width: 100,
+                    height: 88,
+                    width: 88,
                   ),
-                  _entryField('Email', false),
-                  _entryField('Password', true),
+                  _entryField('Email', false, _emailController),
+                  _entryField('Password', true, _passwordController),
                   //SizedBox(height: 15),
-                  _submitButton()
+                  GestureDetector(
+                    onTap: () async {
+                      var email = _emailController.text;
+                      var password = _passwordController.text;
+
+                      var jwt = await attemptLogIn(email, password);
+                      print(jwt);
+
+                      if(jwt != null) {
+                        storage.write(key: "jwt", value: jwt);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HomePage.fromBase64(jwt)
+                            )
+                        );
+                      } else {
+                        displayDialog(context, "An Error Occurred", "No account was found matching that username and password");
+                      }
+                    },
+                      child: _submitButton()
+                  )
                 ],
               ),
             )
@@ -94,4 +159,41 @@ class LoginPage extends StatelessWidget {
       ),
     );
   }
+}
+
+
+class HomePage extends StatelessWidget {
+  HomePage(this.jwt, this.payload);
+
+  factory HomePage.fromBase64(String jwt) =>
+      HomePage(
+          jwt,
+          json.decode(
+              ascii.decode(
+                  base64.decode(base64.normalize(jwt.split(".")[1]))
+              )
+          )
+      );
+
+  final String jwt;
+  final Map<String, dynamic> payload;
+
+  @override
+  Widget build(BuildContext context) =>
+      Scaffold(
+        appBar: AppBar(title: Text("Secret Data Screen")),
+        body: Center(
+          child: FutureBuilder(
+              future: http.read('$SERVER_IP/auth/data', headers: {"Authorization": jwt}),
+              builder: (context, snapshot) =>
+              snapshot.hasData ?
+              Column(children: <Widget>[
+                Text("${payload['data']}, here's the data:"),
+                Text(snapshot.data, style: Theme.of(context).textTheme.display1)
+              ],)
+                  :
+              snapshot.hasError ? Text("An error occurred") : CircularProgressIndicator()
+          ),
+        ),
+      );
 }
