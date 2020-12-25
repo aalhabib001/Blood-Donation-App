@@ -1,3 +1,4 @@
+import 'package:blood_donation_app/src/RequestPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -25,6 +26,17 @@ class DonationInfoPage extends StatelessWidget {
         title: Text("Blood Donation App"),
         backgroundColor: Colors.orange,
         actions: [
+          IconButton(
+            icon: Icon(
+              Icons.add,
+            ),
+            onPressed: () {
+              // Navigator.pop(context);
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => RequestPage()));
+              //Navigator.push(context, route)
+            },
+          ),
           IconButton(
             icon: Icon(
               Icons.logout,

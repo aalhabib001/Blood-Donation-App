@@ -68,3 +68,34 @@ Future<List<DonationData>> getData({String jwtToken}) async {
   }
   return null;
 }
+
+Future<bool> postData(
+    {String address,
+    String bloodGroup,
+    String description,
+    String division,
+    String hospitalName,
+    String phoneNo,
+    String jwtToken}) async {
+  Map<String, String> headers = {};
+  headers['Content-Type'] = 'application/json';
+  headers['Authorization'] = jwtToken;
+  final msg = jsonEncode({
+    "address": address,
+    "bloodGroup": bloodGroup,
+    "description": description,
+    "division": division,
+    "hospitalName": hospitalName,
+    "phoneNo": phoneNo
+  });
+
+  var res =
+      await http.post("$SERVER_IP/donation/list/", headers: headers, body: msg);
+  print(res.statusCode);
+  if (res.statusCode == 200) {
+    print(res.body);
+
+    return true;
+  }
+  return false;
+}
