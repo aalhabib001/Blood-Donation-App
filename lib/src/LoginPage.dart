@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 import './Networking/NetworkHandling.dart';
 import './Widget/EntryFieldWidget.dart';
 import './Widget/RedBigButton.dart';
@@ -24,13 +25,17 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Blood Donation App"),
+        backgroundColor: Colors.orange,
+      ),
       body: Container(
         height: height,
         child: Stack(
           children: <Widget>[
             Positioned(
-              top: -height * .15,
-              right: -MediaQuery.of(context).size.width * .4,
+              top: -height * .25,
+              right: -MediaQuery.of(context).size.width * .35,
               child: BezierContainer(),
             ),
             Container(
@@ -64,7 +69,7 @@ class LoginPage extends StatelessWidget {
 
                       if (jwt != null) {
                         List<DonationData> donationData =
-                            await getData(jwtToken: jwt);
+                        await getData(jwtToken: jwt);
                         storage.write(key: "jwt_blood_app", value: jwt);
                         Navigator.push(
                           context,

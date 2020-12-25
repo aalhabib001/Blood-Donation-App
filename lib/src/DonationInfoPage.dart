@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'Model/DonationData.dart';
+import 'Widget/bezierContainer.dart';
 
 final storage = FlutterSecureStorage();
 
@@ -13,9 +14,11 @@ class DonationInfoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         title: Text("Blood Donation App"),
+        backgroundColor: Colors.orange,
         actions: [
           IconButton(
             icon: Icon(
@@ -28,17 +31,40 @@ class DonationInfoPage extends StatelessWidget {
           )
         ],
       ),
-      body: Center(
-          child: ListView.builder(
-        itemCount: donationData.length,
-        itemBuilder: _buildItemsForListView1,
-      )),
+      body: Container(
+        height: height,
+        child: Stack(
+          children: [
+            Positioned(
+              top: -height * .25,
+              right: -MediaQuery.of(context).size.width * .35,
+              child: BezierContainer(),
+            ),
+            Center(
+              child: ListView.builder(
+                itemCount: donationData.length,
+                itemBuilder: _buildItemsForListView1,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
   Card _buildItemsForListView1(BuildContext context, int index) {
+    var color = new List(2);
+    color[0] = Colors.orange;
+    color[1] = Colors.blue;
+
+    var cl;
+    if (index % 2 == 0)
+      cl = Colors.orange;
+    else
+      cl = Colors.blue;
     return Card(
       shape: RoundedRectangleBorder(
+        side: BorderSide(color: cl, width: 2.0),
         borderRadius: BorderRadius.circular(15.0),
       ),
       elevation: 5,

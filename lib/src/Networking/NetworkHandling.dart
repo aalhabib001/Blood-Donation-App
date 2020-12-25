@@ -25,6 +25,31 @@ Future<String> attemptLogIn(String email, String password) async {
   return null;
 }
 
+Future<String> attemptRegister(
+    {String email, String password, String name, String phone}) async {
+  print('Hi');
+  Map<String, String> headers = {'Content-Type': 'application/json'};
+  final msg = jsonEncode({
+    "email": email,
+    "firstName": name,
+    "lastName": "",
+    "phoneNo": phone,
+    "password": password,
+    "role": ["USER"]
+  });
+  var res = await http.post("$SERVER_IP/auth/registration",
+      body: msg, headers: headers);
+  print(res.statusCode);
+
+  if (res.statusCode == 200) {
+    Map<String, dynamic> response = jsonDecode(res.body);
+
+    String jwt = "Bearer " + response['token'];
+    return jwt;
+  }
+  return null;
+}
+
 Future<List<DonationData>> getData({String jwtToken}) async {
   Map<String, String> headers = {};
   headers['Content-Type'] = 'application/json';

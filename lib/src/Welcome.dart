@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 import './Widget/RedBigButton.dart';
+import 'LoginPage.dart';
 import 'RegisterPage.dart';
 import 'Widget/bezierContainer.dart';
-import 'LoginPage.dart';
 
 final storage = FlutterSecureStorage();
 
@@ -13,13 +14,17 @@ class WelcomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Blood Donation App"),
+        backgroundColor: Colors.orange,
+      ),
       body: Container(
         height: height,
         child: Stack(
           children: <Widget>[
             Positioned(
-              top: -height * .15,
-              right: -MediaQuery.of(context).size.width * .4,
+              top: -height * .25,
+              right: -MediaQuery.of(context).size.width * .35,
               child: BezierContainer(),
             ),
             Container(
@@ -45,9 +50,7 @@ class WelcomePage extends StatelessWidget {
                     height: 10,
                   ),
                   GestureDetector(
-                    onTap: () async {
-                      var strg = await storage.read(key: 'jwt');
-                      print(strg);
+                    onTap: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => LoginPage()));
                     },
