@@ -1,7 +1,7 @@
 import 'package:blood_donation_app/src/RegisterPage.dart';
-import 'package:blood_donation_app/src/welcome.dart';
+import 'package:blood_donation_app/src/Welcome.dart';
 import 'package:flutter/material.dart';
-import 'src/loginPage.dart';
+import 'src/FirstPage.dart';
 
 void main() {
   runApp(MyApp());
@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: WelcomePage(),
+      home: FirstPage(),
     );
   }
 }
