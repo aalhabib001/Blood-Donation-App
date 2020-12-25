@@ -1,6 +1,8 @@
-import 'package:http/http.dart' as http;
 import 'dart:convert';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
+
 import '../Model/DonationData.dart';
 
 const SERVER_IP = 'https://blood-donation-backend-se231.herokuapp.com/api';
@@ -28,10 +30,7 @@ Future<List<DonationData>> getData({String jwtToken}) async {
   headers['Content-Type'] = 'application/json';
   headers['Authorization'] = jwtToken;
 
-  var res = await http.get(
-    "$SERVER_IP/donation/list/",
-    headers: headers
-  );
+  var res = await http.get("$SERVER_IP/donation/list/", headers: headers);
   print(res.statusCode);
   if (res.statusCode == 200) {
     print(res.body);

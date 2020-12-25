@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'Model/DonationData.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+import 'Model/DonationData.dart';
 
 final storage = FlutterSecureStorage();
 
@@ -37,6 +38,11 @@ class DonationInfoPage extends StatelessWidget {
 
   Card _buildItemsForListView1(BuildContext context, int index) {
     return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      elevation: 5,
+      margin: new EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
