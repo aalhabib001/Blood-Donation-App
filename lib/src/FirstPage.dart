@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'Widget/bezierContainer.dart';
+
 import './Networking/NetworkHandling.dart';
-import 'Model/DonationData.dart';
 import 'DonationInfoPage.dart';
+import 'Model/DonationData.dart';
 import 'Welcome.dart';
+import 'Widget/bezierContainer.dart';
 
 final storage = FlutterSecureStorage();
 
@@ -54,13 +55,21 @@ class FirstPage extends StatelessWidget {
                       if (jwtToken != null) {
                         List<DonationData> donationData =
                             await getData(jwtToken: jwtToken);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                DonationInfoPage(donationData),
-                          ),
-                        );
+                        if (donationData != null) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DonationInfoPage(jwtToken),
+                            ),
+                          );
+                        } else {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => WelcomePage(),
+                            ),
+                          );
+                        }
                       }
                       else {
                         Navigator.push(

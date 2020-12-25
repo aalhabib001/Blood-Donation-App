@@ -8,18 +8,18 @@ import 'Widget/bezierContainer.dart';
 final storage = FlutterSecureStorage();
 
 // ignore: must_be_immutable
-class DonationInfoPage extends StatelessWidget {
-  DonationInfoPage(this.jwt);
+class DonationInfoPage1 extends StatelessWidget {
+  DonationInfoPage1(this.jwt);
 
+  // factory DonationInfoPage1(String jwt) => DonationInfoPage1(
+  //     jwt, donationData
+  // );
+  final String jwt;
   List<DonationData> donationData;
-  String jwt;
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery
-        .of(context)
-        .size
-        .height;
+    final height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         title: Text("Blood Donation App"),
@@ -31,9 +31,7 @@ class DonationInfoPage extends StatelessWidget {
             ),
             onPressed: () async {
               await storage.delete(key: "jwt_blood_app");
-              // Navigator.pop(context);
-              Navigator.popUntil(context, (route) => route.isFirst);
-              //Navigator.push(context, route)
+              Navigator.pop(context);
             },
           )
         ],
@@ -51,10 +49,7 @@ class DonationInfoPage extends StatelessWidget {
                   children: [
                     Positioned(
                       top: -height * .25,
-                      right: -MediaQuery
-                          .of(context)
-                          .size
-                          .width * .35,
+                      right: -MediaQuery.of(context).size.width * .35,
                       child: BezierContainer(),
                     ),
                     Center(
@@ -65,26 +60,19 @@ class DonationInfoPage extends StatelessWidget {
                     ),
                   ],
                 );
-              }
-              else {
+              } else {
                 return Stack(
                   children: [
                     Positioned(
                       top: -height * .25,
-                      right: -MediaQuery
-                          .of(context)
-                          .size
-                          .width * .35,
+                      right: -MediaQuery.of(context).size.width * .35,
                       child: BezierContainer(),
                     ),
-                    Center(
-                        child: CircularProgressIndicator()
-                    ),
+                    Center(child: CircularProgressIndicator()),
                   ],
                 );
               }
-            }
-        ),
+            }),
       ),
     );
   }

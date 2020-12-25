@@ -5,7 +5,6 @@ import './Networking/NetworkHandling.dart';
 import './Widget/EntryFieldWidget.dart';
 import './Widget/RedBigButton.dart';
 import 'DonationInfoPage.dart';
-import 'Model/DonationData.dart';
 import 'Widget/bezierContainer.dart';
 
 const SERVER_IP = 'https://blood-donation-backend-se231.herokuapp.com/api';
@@ -68,16 +67,20 @@ class LoginPage extends StatelessWidget {
                       print(jwt);
 
                       if (jwt != null) {
-                        List<DonationData> donationData =
-                        await getData(jwtToken: jwt);
                         storage.write(key: "jwt_blood_app", value: jwt);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                DonationInfoPage(donationData),
+                            builder: (context) => DonationInfoPage(jwt),
                           ),
                         );
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) =>
+                        //         DonationInfoPage1(jwt),
+                        //   ),
+                        // );
                       } else {
                         displayDialog(context, "An Error Occurred",
                             "No account was found matching that username and password");
