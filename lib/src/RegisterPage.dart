@@ -1,4 +1,3 @@
-
 import 'package:blood_donation_app/src/Networking/NetworkHandling.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -16,6 +15,8 @@ class RegisterPage extends StatelessWidget {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _bloodGroupController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
 
   void displayDialog(context, title, text) => showDialog(
         context: context,
@@ -66,6 +67,14 @@ class RegisterPage extends StatelessWidget {
                       title: "Phone",
                       isPassword: false,
                       tc: _phoneController,
+                    ), EntryFieldWidget(
+                      title: "Location",
+                      isPassword: false,
+                      tc: _locationController,
+                    ), EntryFieldWidget(
+                      title: "Blood Group",
+                      isPassword: false,
+                      tc: _bloodGroupController,
                     ),
                     EntryFieldWidget(
                       title: "Password",
@@ -79,12 +88,17 @@ class RegisterPage extends StatelessWidget {
                           var password = _passwordController.text;
                           var name = _nameController.text;
                           var phone = _phoneController.text;
+                          var bloodGroup = _bloodGroupController.text;
+                          var location = _locationController.text;
 
                           var jwt = await attemptRegister(
-                              name: name,
-                              email: email,
-                              phone: phone,
-                              password: password);
+                            name: name,
+                            email: email,
+                            phone: phone,
+                            password: password,
+                            bloodGroup: bloodGroup,
+                            location: location,
+                          );
 
                           print(jwt);
 
@@ -113,4 +127,3 @@ class RegisterPage extends StatelessWidget {
     );
   }
 }
-

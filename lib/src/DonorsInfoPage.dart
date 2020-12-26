@@ -1,19 +1,18 @@
-import 'package:blood_donation_app/src/DonorsInfoPage.dart';
+import 'package:blood_donation_app/src/Model/DonorsData.dart';
 import 'package:blood_donation_app/src/RequestPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import 'Model/DonationData.dart';
 import 'Networking/NetworkHandling.dart';
 import 'Widget/bezierContainer.dart';
 
 final storage = FlutterSecureStorage();
 
 // ignore: must_be_immutable
-class DonationInfoPage extends StatelessWidget {
-  DonationInfoPage(this.jwt);
+class DonorsInfoPage extends StatelessWidget {
+  DonorsInfoPage(this.jwt);
 
-  List<DonationData> donationData;
+  List<DonorsData> donorsData;
   String jwt;
 
   @override
@@ -24,17 +23,6 @@ class DonationInfoPage extends StatelessWidget {
         title: Text("Blood Donation App"),
         backgroundColor: Colors.orange,
         actions: [
-          IconButton(
-            icon: Icon(
-              Icons.list,
-            ),
-            onPressed: () {
-              // Navigator.pop(context);
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => DonorsInfoPage(jwt)));
-              //Navigator.push(context, route)
-            },
-          ),
           IconButton(
             icon: Icon(
               Icons.add,
@@ -62,25 +50,22 @@ class DonationInfoPage extends StatelessWidget {
       body: Container(
         height: height,
         child: FutureBuilder(
-            future: getData(jwtToken: jwt),
+            future: getDonors(jwtToken: jwt),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 print("Yes");
-                donationData = snapshot.data;
+                donorsData = snapshot.data;
 
                 return Stack(
                   children: [
                     Positioned(
                       top: -height * .25,
-                      right: -MediaQuery
-                          .of(context)
-                          .size
-                          .width * .35,
+                      right: -MediaQuery.of(context).size.width * .35,
                       child: BezierContainer(),
                     ),
                     Center(
                       child: ListView.builder(
-                        itemCount: donationData.length,
+                        itemCount: donorsData.length,
                         itemBuilder: _buildItemsForListView1,
                       ),
                     ),
@@ -91,10 +76,7 @@ class DonationInfoPage extends StatelessWidget {
                   children: [
                     Positioned(
                       top: -height * .25,
-                      right: -MediaQuery
-                          .of(context)
-                          .size
-                          .width * .35,
+                      right: -MediaQuery.of(context).size.width * .35,
                       child: BezierContainer(),
                     ),
                     Center(child: CircularProgressIndicator()),
@@ -125,43 +107,29 @@ class DonationInfoPage extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           SizedBox(
-            height: 10,
+            height: 4,
           ),
           ListTile(
             leading: Text(
-              donationData[index].bloodGroup,
+              donorsData[index].bloodGroup,
               style: TextStyle(fontSize: 25),
             ),
-            title: Text(
-                donationData[index].description +
-                    " at " +
-                    donationData[index].hospitalName,
-                style: TextStyle(fontSize: 17)),
-            subtitle: Text(
-                donationData[index].address +
-                    ", " +
-                    donationData[index].areaDivision,
-                style: TextStyle(fontSize: 15)),
+            title: Text(donorsData[index].name, style: TextStyle(fontSize: 20)),
+            subtitle: Text(donorsData[index].location,
+                style: TextStyle(fontSize: 20)),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
-              Text(
-                donationData[index].name,
-                style: TextStyle(fontSize: 18),
-                textAlign: TextAlign.start,
-              ),
-              const SizedBox(height: 5, width: 8),
+              const SizedBox(height: 2, width: 8),
               Icon(Icons.phone_android),
               const SizedBox(width: 4),
               Text(
-                donationData[index].phoneNo,
-                style: TextStyle(
-                  fontSize: 20,
-                ),
+                donorsData[index].phoneNo,
+                style: TextStyle(fontSize: 20),
               ),
-              const SizedBox(height: 5, width: 8),
+              const SizedBox(height: 2, width: 8),
             ],
           ),
           const SizedBox(height: 5),

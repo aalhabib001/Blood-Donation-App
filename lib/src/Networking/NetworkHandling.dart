@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:blood_donation_app/src/Model/DonorsData.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
@@ -26,7 +27,12 @@ Future<String> attemptLogIn(String email, String password) async {
 }
 
 Future<String> attemptRegister(
-    {String email, String password, String name, String phone}) async {
+    {String email,
+    String password,
+    String name,
+    String phone,
+    String bloodGroup,
+    String location}) async {
   print('Hi');
   Map<String, String> headers = {'Content-Type': 'application/json'};
   final msg = jsonEncode({
@@ -35,6 +41,8 @@ Future<String> attemptRegister(
     "lastName": "",
     "phoneNo": phone,
     "password": password,
+    "location": location,
+    "bloodGroup": bloodGroup,
     "role": ["USER"]
   });
   var res = await http.post("$SERVER_IP/auth/registration",
@@ -69,14 +77,33 @@ Future<List<DonationData>> getData({String jwtToken}) async {
   return null;
 }
 
-Future<bool> postData(
-    {String address,
-    String bloodGroup,
-    String description,
-    String division,
-    String hospitalName,
-    String phoneNo,
-    String jwtToken}) async {
+Future<List<DonorsData>> getDonors({String jwtToken}) async {
+  Map<String, String> headers = {};
+  headers['Content-Type'] = 'application/json';
+  headers['Authorization'] = jwtToken;
+
+  var res = await http.get(
+      "$SERVER_IP/donation/list/donors/", headers: headers);
+  print(res.statusCode);
+  if (res.statusCode == 200) {
+    print(res.body);
+    List<DonorsData> response;
+    response = (jsonDecode(res.body) as List)
+        .map((i) => DonorsData.fromJson(i))
+        .toList();
+
+    return response;
+  }
+  return null;
+}
+
+Future<bool> postData({String address,
+  String bloodGroup,
+  String description,
+  String division,
+  String hospitalName,
+  String phoneNo,
+  String jwtToken}) async {
   Map<String, String> headers = {};
   headers['Content-Type'] = 'application/json';
   headers['Authorization'] = jwtToken;
